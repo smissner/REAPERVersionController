@@ -4,6 +4,7 @@ import subprocess
 import sys
 
 REAPER_PATH_MAC = '/Applications/REAPER.app/Contents/MacOS/REAPER'
+REAPER_PATH_WINDOWS = 'INSERT PATH HERE'
 
 
 def set_render_outfile(rpp_path: str, out_audio_name: str, copy=True) -> str:
@@ -40,17 +41,24 @@ def set_render_outfile(rpp_path: str, out_audio_name: str, copy=True) -> str:
     return out_path
 
 
-def render(rpp_path: str):
+def render(rpp_path: str, reaper_path: str = None):
     '''
     Render the reaper project file at `rpp_path` using REAPER.
     The rpp file *must* contain render information or else the render will silently fail.
+
+    Optionally, `reaper_path` may be provided to point to the REAPER executable file on your system.
     '''
 
-    match sys.platform:
-        case 'darwin':
-            reaper_path = REAPER_PATH_MAC
-        case _:
-            raise NotImplementedError('TODO: add windows support')
+    if not reaper_path:
+        match sys.platform:
+            case 'darwin':
+                reaper_path = REAPER_PATH_MAC
+            case 'win32':
+                reaper_path = REAPER_PATH_WINDOWS
+                raise NotImplementedError('TODO: add windows REAPER path')
+            case _:
+                raise ValueError(
+                    '`reaper_path` must be provided on systems outside of Mac and Windows')
 
     args = [reaper_path, '-renderproject', rpp_path]
     subprocess.run(args, capture_output=True, check=True)
