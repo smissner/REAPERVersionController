@@ -1,11 +1,64 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[39]:
+# In[13]:
 
 
 from nostril import nonsense
+import os
 class ConflictFinder:
+    def createConflicts(f1:str,f2:str,newfilename = "",newloc = "."):
+        if(newfilename == ""):
+            newfilename = f1 + "compare" + f2
+        os.system("fc " + f1 + " " + f2 + " >> comparefilef3.txt")
+        conlines = ConflictFinder.getLines("./comparefilef3.txt")
+        flines = ConflictFinder.getLines(f1)
+        f = open(newloc + "/" + newfilename,"w")
+        j = 1
+        i = 0
+        findline = ""
+        while(i<len(flines)):
+            line = flines[i]
+            while((findline == "" or findline == "\n") and j < len(conlines)):
+                if("*****" not in conlines[j] and conlines[j] != "\n"):
+                    findline = conlines[j]
+                else:
+                    j += 1
+            if(line == findline):
+                f.write(line)
+                if("<REAPER_PROJECT" not in findline):
+                    f.write("<<<<<<< " + f1 + "\n")
+                    check = True
+                    nlines = []
+                    while(conlines[j] != "*****\n"):
+                        j += 1
+                        if("*****" in conlines[j]):
+                            if(conlines[j] != "*****\n"):
+                                nlines.pop()
+                                nlines.append("=======\n")
+                                check = False
+                                j += 1
+                            else:
+                                nlines.pop()
+                                nlines.append(">>>>>>>" + f2 + "\n")
+                                for nl in nlines:
+                                    f.write(nl)
+                        else:
+                            nlines.append(conlines[j])
+                        if(check):
+                            i += 1
+                else:
+                    while(conlines[j] != "*****\n"):
+                        j += 1
+                findline = ""
+            else:
+                f.write(line)
+            
+            i += 1
+        os.remove("./comparefilef3.txt")
+        f.close()
+            
+        
     def findConflicts(fileLoc:str):        
         lines = ConflictFinder.getLines(fileLoc)
         conflictLines = []
@@ -15,7 +68,7 @@ class ConflictFinder:
         sub = []
         ignore = True
         for l in lines:
-            if("<PROJBAY" in l):
+            if("GLOBAL_AUTO" in l):
                 ignore = False
             if("=======" in l or "<<<<<<<" in l):
                 sub.append(i)
@@ -47,7 +100,7 @@ class ConflictFinder:
                 pass
             i = c[0] - 1
             closed = False
-            while(i>=0 and "<PROJBAY" not in lines[i]):
+            while(i>=0 and "GLOBAL_AUTO" not in lines[i]):
                 line = lines[i]
                 if("NAME" in line):
                     try:
@@ -76,6 +129,8 @@ class ConflictFinder:
                 if(line[fChar] == ">"):
                     closed = True
                 i = i - 1
+            if(name[0] == ":"):
+                name = name[1:]
             names.append(name.replace("\n",""))
         return names
             
