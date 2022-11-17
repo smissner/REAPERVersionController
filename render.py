@@ -4,7 +4,7 @@ import subprocess
 import sys
 
 REAPER_PATH_MAC = '/Applications/REAPER.app/Contents/MacOS/REAPER'
-REAPER_PATH_WINDOWS = 'INSERT PATH HERE'
+REAPER_PATH_WINDOWS = 'C:\Program Files (x86)\REAPER'
 
 
 class CannotFindReaperError(Exception):
