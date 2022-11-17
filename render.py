@@ -7,6 +7,38 @@ REAPER_PATH_MAC = '/Applications/REAPER.app/Contents/MacOS/REAPER'
 REAPER_PATH_WINDOWS = 'INSERT PATH HERE'
 
 
+class CannotFindReaperError(Exception):
+    '''
+    Raised when a valid path to a REAPER executable cannot be found.
+    '''
+
+    pass
+
+
+def find_reaper() -> str:
+    '''
+    Gives the path to REAPER on Mac and Windows.
+
+    Raises an exception if the REAPER executable file cannot be found.
+    '''
+
+    try_path = None
+
+    match sys.platform:
+        case 'darwin':
+            try_path = REAPER_PATH_MAC
+        case 'win32':
+            try_path = REAPER_PATH_WINDOWS
+
+    # check whether the file path exists and can be executed
+    if try_path:
+        is_executable = os.access(try_path, os.X_OK)
+        if is_executable:
+            return try_path
+
+    raise CannotFindReaperError()
+
+
 def set_render_outfile(rpp_path: str, out_audio_name: str, copy=True) -> str:
     '''
     Set the name of the audio file that REAPER will render to.
@@ -47,18 +79,12 @@ def render(rpp_path: str, reaper_path: str = None):
     The rpp file *must* contain render information or else the render will silently fail.
 
     Optionally, `reaper_path` may be provided to point to the REAPER executable file on your system.
+
+    Raises an exception if `reaper_path` is not provided and the REAPER executable file cannot be found.
     '''
 
     if not reaper_path:
-        match sys.platform:
-            case 'darwin':
-                reaper_path = REAPER_PATH_MAC
-            case 'win32':
-                reaper_path = REAPER_PATH_WINDOWS
-                raise NotImplementedError('TODO: add windows REAPER path')
-            case _:
-                raise ValueError(
-                    '`reaper_path` must be provided on systems outside of Mac and Windows')
+        reaper_path = find_reaper()
 
     args = [reaper_path, '-renderproject', rpp_path]
     subprocess.run(args, capture_output=True, check=True)
