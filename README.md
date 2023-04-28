@@ -1,5 +1,5 @@
 
-## Usage Instructions (also found in Python file)
+## Usage Instructions
 #### Things you need:
 #### 1. Update your system to latest software (usually good to do)
 #### 2. Update Python (this script uses 3.11.3)
