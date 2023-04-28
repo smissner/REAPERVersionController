@@ -1,12 +1,3 @@
-# githubreaper
-- A senior capstone project I'm working on with some classmates in school. More details coming soon 👀!
-
-![Commit](/screenshots/commit.png)
-
-## Overview
-- The contents within this repo allows the Digital Audio Workstation, Reaper, to behave like GitHub.
-- Think of it as "version control at a musician's fingertips... Or keys 🎹."
-- Run the script 'githubreaper.py' inside Reaper 'Actions' menu and adapt it for any repo by following the instructions below 🙂!
 
 ## Usage Instructions (also found in Python file)
 #### Things you need:
@@ -22,6 +13,5 @@
 #### 8. You'll need to configure your own SSH key to write to your repo
 #### See: https://docs.github.com/en/authentication/connecting-to-github-with-ssh
 #### See: https://docs.github.com/en/get-started/getting-started-with-git/managing-remote-repositories#switching-remote-urls-from-https-to-ssh
-#### 9. Add this Python script to Reaper using the 'Actions' menu
-#### 10. Replace project and repo details below with your repo and project
-#### 11. Run the script (inside reaper 'Actions' menu with the project open--don't use terminal)
+#### 9. Add the contents of this repository to your Reaper scripts folder, which can be found by going to the actions panel in reaper.
+#### 10. If you want to try out the githubReaper script, clone and follow the instructions from this test repostiory, https://github.com/emurray2/githubreaper
